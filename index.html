@@ -255,13 +255,16 @@ function medievalConfettiOld() {
 
 <script>
 let catColors = [];
+let catPictures = [];
 
 function updateCats() {
   const container = document.getElementById('cat-container');
   const catCount = Math.max(0, parseInt(document.getElementById('cats').innerText));
 
+  container.innerHTML = "";
+
   // If more cats were added → generate new colors only for new cats
-  while (catColors.length < catCount) {
+  while (catColors.length < Math.max(0, catCount - 2)) {
     catColors.push({
       hue: Math.floor(Math.random() * 360),
       saturation: 70 + Math.random() * 60,
@@ -270,26 +273,34 @@ function updateCats() {
   }
 
   // If cats were removed → remove extra colors
-  if (catColors.length > catCount) {
-    catColors = catColors.slice(0, catCount);
+  if (catColors.length > catCount - 2) {
+    catColors = catColors.slice(0, Math.max(0, catCount - 2));
   }
 
-  container.innerHTML = "";
-
-  catColors.forEach(color => {
+  for (let i=0; i<catCount; i++){
     const img = document.createElement("img");
-    img.src = "cat.png";
+
     img.style.width = "40px";
     img.style.margin = "3px";
 
+    if (i===0) {
+      img.src = "cat_o.png";
+    }
+    else if (i === 1){
+      img.src = "cat_m.png"
+    }
+    else {
+    const color = catColors[i - 2];
+    img.src = "cat.png";
     img.style.filter = `
       hue-rotate(${color.hue}deg)
       saturate(${color.saturation}%)
       brightness(${color.brightness}%)
     `;
+    }
 
     container.appendChild(img);
-  });
+  }
 }
 </script>
 
