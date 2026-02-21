@@ -25,8 +25,14 @@ body {
 }
 
 body, button {
-  cursor: url('glove3.png'), auto; /* sword icon */
+  cursor: url('glove3.png') 16 0, auto; /* sword icon */
 }
+
+
+body:active, button:active {
+  cursor: url('glove2.png') 16 0, auto; /* sword icon */
+}
+
 /* Character sheet container */
 .tiddler {
   border: 2px solid rgba(139, 90, 60, 0.8); /* slightly transparent border */
@@ -41,9 +47,9 @@ body, button {
 button {
   background-color: rgba(196, 154, 108, 0.9);
   border: 2px solid rgba(125, 90, 58, 0.9);
-  padding: 6px 12px;
+  padding: 3px 8px;
   font-family: 'Cinzel', serif;
-  margin: 2px;
+  margin: 0px;
 
   /* 3D press effect */
   box-shadow: 0 4px 0 rgba(125, 90, 58, 0.9), 0 6px 10px rgba(0,0,0,0.2);
@@ -99,6 +105,7 @@ body, p, span, button {
 		<span class="attr-name">Str: <span id="str">10</span></span>
 		<div class="attr-buttons">
 			<button onclick="
+        playClickSound();
 				document.getElementById('str').innerText=parseInt(document.getElementById('str').innerText)+1;
 				document.getElementById('points').innerText=parseInt(document.getElementById('points').innerText)+(-1);
 				">+</button>
@@ -109,6 +116,7 @@ body, p, span, button {
 		<span class="attr-name">Dex: <span id="dex">12</span></span>
 		<div class="attr-buttons">
 			<button onclick="
+        playClickSound();
 				document.getElementById('dex').innerText=parseInt(document.getElementById('dex').innerText)+1;
 				document.getElementById('points').innerText=parseInt(document.getElementById('points').innerText)+(-1);
 				">+</button>
@@ -119,6 +127,7 @@ body, p, span, button {
 		<span class="attr-name">Int: <span id="int">14</span></span>
 		<div class="attr-buttons">
 			<button onclick="
+        playClickSound();
 				document.getElementById('int').innerText=parseInt(document.getElementById('int').innerText)+1;
 				document.getElementById('points').innerText=parseInt(document.getElementById('points').innerText)+(-1);
 				">+</button>
@@ -129,6 +138,7 @@ body, p, span, button {
 		<span class="attr-name">Height: <span id="height">50</span></span>
 		<div class="attr-buttons">
 			<button onclick="
+        playClickSound();
 				document.getElementById('height').innerText=parseInt(document.getElementById('height').innerText)+1;
 				document.getElementById('points').innerText=parseInt(document.getElementById('points').innerText)+(-1);
 				">+</button>
@@ -139,6 +149,7 @@ body, p, span, button {
 		<span class="attr-name">Beard: <span id="beard">0</span></span>
 		<div class="attr-buttons">
 			<button onclick="
+        playClickSound();
 				document.getElementById('beard').innerText=parseInt(document.getElementById('beard').innerText)+1;
 				document.getElementById('points').innerText=parseInt(document.getElementById('points').innerText)+(-1);
 				">+</button>
@@ -149,6 +160,7 @@ body, p, span, button {
 		<span class="attr-name">Papers: <span id="papers">0</span></span>
 		<div class="attr-buttons">
 			<button onclick="
+        playClickSound();
 				document.getElementById('papers').innerText=parseInt(document.getElementById('papers').innerText)+1;
 				document.getElementById('points').innerText=parseInt(document.getElementById('points').innerText)+(-1);
 				">+</button>
@@ -159,6 +171,7 @@ body, p, span, button {
 		<span class="attr-name">Nobel Prizes: <span id="nobel">0</span></span>
 		<div class="attr-buttons">
 			<button onclick="
+        playClickSound();
 				document.getElementById('nobel').innerText=parseInt(document.getElementById('nobel').innerText)+1;
 				document.getElementById('points').innerText=parseInt(document.getElementById('points').innerText)+(-1);
 				">+</button>
@@ -169,6 +182,7 @@ body, p, span, button {
 		<span class="attr-name">Spouses: <span id="spouses">0</span></span>
 		<div class="attr-buttons">
 			<button onclick="
+        playClickSound();
 				document.getElementById('spouses').innerText=parseInt(document.getElementById('spouses').innerText)+1;
 				document.getElementById('points').innerText=parseInt(document.getElementById('points').innerText)+(-1);
 				medievalConfetti(event);
@@ -179,20 +193,33 @@ body, p, span, button {
 	<div class="attribute-row">
 		<span class="attr-name">Cats: <span id="cats">0</span></span>
 		<div class="attr-buttons">
-			<button onclick="
-				document.getElementById('cats').innerText=parseInt(document.getElementById('cats').innerText)+1;
-				document.getElementById('points').innerText=parseInt(document.getElementById('points').innerText)+(-1);
-				">+</button>
+      <button onclick="
+        playClickSound();
+        let catsEl = document.getElementById('cats');
+        let pointsEl = document.getElementById('points');
+
+        let currentCats = parseInt(catsEl.innerText);
+        let currentPoints = parseInt(pointsEl.innerText);
+
+        if(currentPoints > 0){
+          catsEl.innerText = currentCats + 1;
+          pointsEl.innerText = currentPoints - 1;
+          updateCats();
+        }
+      ">+</button>
 		</div>
 	</div>
 
-
+<div id="cat-container" style="margin-top:10px;"></div>
 </div>
 
 <button onclick="
+  playClickSound();
 	document.getElementById('level').innerText=parseInt(document.getElementById('level').innerText)+1;
 	document.getElementById('points').innerText=parseInt(document.getElementById('points').innerText)+10;
 	">+</button>
+
+<audio id="clickSound" src="click.wav" preload="auto"></audio>
 
 </body>
 
@@ -225,5 +252,101 @@ function medievalConfettiOld() {
   });
 }
 </script>
+
+<script>
+let catColors = [];
+
+function updateCats() {
+  const container = document.getElementById('cat-container');
+  const catCount = Math.max(0, parseInt(document.getElementById('cats').innerText));
+
+  // If more cats were added → generate new colors only for new cats
+  while (catColors.length < catCount) {
+    catColors.push({
+      hue: Math.floor(Math.random() * 360),
+      saturation: 70 + Math.random() * 60,
+      brightness: 80 + Math.random() * 40
+    });
+  }
+
+  // If cats were removed → remove extra colors
+  if (catColors.length > catCount) {
+    catColors = catColors.slice(0, catCount);
+  }
+
+  container.innerHTML = "";
+
+  catColors.forEach(color => {
+    const img = document.createElement("img");
+    img.src = "cat.png";
+    img.style.width = "40px";
+    img.style.margin = "3px";
+
+    img.style.filter = `
+      hue-rotate(${color.hue}deg)
+      saturate(${color.saturation}%)
+      brightness(${color.brightness}%)
+    `;
+
+    container.appendChild(img);
+  });
+}
+</script>
+
+<script>
+function updateCatsRandomColors() {
+  const container = document.getElementById('cat-container');
+  const catCount = Math.max(0, parseInt(document.getElementById('cats').innerText));
+
+  container.innerHTML = "";
+
+  for (let i = 0; i < catCount; i++) {
+    const img = document.createElement("img");
+    img.src = "cat.png";
+    img.style.width = "40px";
+    img.style.margin = "3px";
+
+    // 🎨 Random color magic
+    const hue = Math.floor(Math.random() * 360);
+    const saturation = 70 + Math.random() * 60;  // 70–130%
+    const brightness = 80 + Math.random() * 40;  // 80–120%
+
+    img.style.filter = `
+      hue-rotate(${hue}deg)
+      saturate(${saturation}%)
+      brightness(${brightness}%)
+    `;
+
+    container.appendChild(img);
+  }
+}
+</script>
+
+<script>
+function updateCatsOld() {
+  const container = document.getElementById('cat-container');
+  const catCount = Math.max(0, parseInt(document.getElementById('cats').innerText));
+
+  container.innerHTML = ""; // clear existing cats
+
+  for (let i = 0; i < catCount; i++) {
+    const img = document.createElement("img");
+    img.src = "cat.png";
+    img.style.width = "40px";
+    img.style.margin = "2px";
+    container.appendChild(img);
+  }
+}
+updateCats();
+</script>
+
+<script>
+function playClickSound() {
+  const sound = document.getElementById("clickSound");
+  sound.currentTime = 0;  // allows rapid clicking
+  sound.play();
+}
+</script>
+
 
 </html>
