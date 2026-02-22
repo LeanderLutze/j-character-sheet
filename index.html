@@ -209,6 +209,18 @@
         </div>
       </div>
 
+
+      <div class="attribute-row">
+        <span class="attr-name">Plants: <span id="plants">0</span></span>
+        <div class="attr-buttons">
+          <button onclick="
+            playClickSound();
+            document.getElementById('plants').innerText=parseInt(document.getElementById('plants').innerText)+1;
+            document.getElementById('points').innerText=parseInt(document.getElementById('points').innerText)+(-1);
+            ">+</button>
+        </div>
+      </div>
+
       <div class="attribute-row">
         <span class="attr-name">Papers: <span id="papers">0</span></span>
         <div class="attr-buttons">
